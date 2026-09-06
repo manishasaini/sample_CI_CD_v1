@@ -55,15 +55,13 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${{ secrets.SERVER_PORT }}" "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Deploy files
+      - name: Install dependencies and restart Passenger
         run: |
-          rsync -az \
-            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
-            --exclude '.git/' \
-            --exclude '.github/' \
-            --exclude '.venv/' \
-            --exclude '__pycache__/' \
-            ./ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.APP_PATH }}/"
+          ssh -p "${{ secrets.SERVER_PORT }}" \
+            "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" \
+            "source '${{ secrets.VENV_PATH }}/bin/activate' && \
+             python -m pip install -r '${{ secrets.APP_PATH }}/requirements.txt' && \
+             touch '${{ secrets.APP_PATH }}/tmp/restart.txt'"
 
       - name: Install dependencies and restart Passenger
         run: |
