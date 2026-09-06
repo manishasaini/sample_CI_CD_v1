@@ -56,14 +56,14 @@ jobs:
           ssh-keyscan -p "${{ secrets.SERVER_PORT }}" "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy files
-  run: |
-    rsync -az \
-      -e "ssh -p ${{ secrets.SERVER_PORT }}" \
-      --exclude '.git/' \
-      --exclude '.github/' \
-      --exclude '.venv/' \
-      --exclude '__pycache__/' \
-      ./ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.APP_PATH }}/"
+        run: |
+          rsync -az \
+            -e "ssh -p ${{ secrets.SERVER_PORT }}" \
+            --exclude '.git/' \
+            --exclude '.github/' \
+            --exclude '.venv/' \
+            --exclude '__pycache__/' \
+            ./ "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:${{ secrets.APP_PATH }}/"
 
       - name: Install dependencies and restart Passenger
         run: |
